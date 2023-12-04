@@ -3,8 +3,8 @@ import {
   Box,
   Button,
   TextField,
-  Typography,
   useMediaQuery,
+  Typography,
   useTheme,
 } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -51,13 +51,13 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const register = async (values, onsubmitProps) => {
-    // this action allows us to send form infor with image
-    const formData = new formData();
+  const register = async (values, onSubmitProps) => {
+    // this allows us to send form info with image
+    const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
     }
@@ -71,21 +71,21 @@ const Form = () => {
       }
     );
     const savedUser = await savedUserResponse.json();
-    onsubmitProps.resetForm();
+    onSubmitProps.resetForm();
 
     if (savedUser) {
       setPageType("login");
     }
   };
 
-  const login = async (values, onsubmitProps) => {
+  const login = async (values, onSubmitProps) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
     const loggedIn = await loggedInResponse.json();
-    onsubmitProps.resetForm();
+    onSubmitProps.resetForm();
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -93,12 +93,13 @@ const Form = () => {
           token: loggedIn.token,
         })
       );
+      navigate("/home");
     }
   };
 
-  const handleFormSubmit = async (values, onsubmitProps) => {
-    if (isLogin) await login(values, onsubmitProps);
-    if (isRegister) await register(values, onsubmitProps);
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
   };
 
   return (
@@ -179,7 +180,7 @@ const Form = () => {
                   p="1rem"
                 >
                   <Dropzone
-                    acceptedFiles=".jpg, .jpeg, .png"
+                    acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
                     onDrop={(acceptedFiles) =>
                       setFieldValue("picture", acceptedFiles[0])
@@ -187,7 +188,7 @@ const Form = () => {
                   >
                     {({ getRootProps, getInputProps }) => (
                       <Box
-                        {...getRootProps}
+                        {...getRootProps()}
                         border={`2px dashed ${palette.primary.main}`}
                         p="1rem"
                         sx={{ "&:hover": { cursor: "pointer" } }}
@@ -207,6 +208,7 @@ const Form = () => {
                 </Box>
               </>
             )}
+
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -260,7 +262,7 @@ const Form = () => {
               }}
             >
               {isLogin
-                ? "Don't have an account? Sign Up here"
+                ? "Don't have an account? Sign Up here."
                 : "Already have an account? Login here."}
             </Typography>
           </Box>
