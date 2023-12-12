@@ -1,10 +1,19 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import Form from "./Form";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const theme = useTheme();
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const isAuth = useSelector((state) => state.token);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/home");
+    }
+  }, []);
   return (
     <Box>
       <Box
@@ -24,10 +33,10 @@ const LoginPage = () => {
         borderRadius="1.5rem"
         backgroundColor={theme.palette.background.alt}
       >
-        <Typography fontWeight="500" variant="h5" sx={{ mb:"1.5rem" }}>
-              Welcome to Socipedia, the Social Media for Sociopaths
+        <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
+          Welcome to Socipedia, the Social Media for Sociopaths
         </Typography>
-        <Form/>
+        <Form />
       </Box>
     </Box>
   );
